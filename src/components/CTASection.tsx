@@ -6,22 +6,21 @@ export default function CTASection() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    comment: ''
+    comment: '',
   });
   const [submitted, setSubmitted] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [placesLeft, setPlacesLeft] = useState(3);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set random number only on client side
     setPlacesLeft(Math.floor(Math.random() * 5) + 2);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    
-    // Fake countdown
+
     let count = 10;
     setCountdown(count);
     const timer = setInterval(() => {
@@ -33,179 +32,274 @@ export default function CTASection() {
       }
     }, 1000);
 
-    // Reset form
     setTimeout(() => {
       setSubmitted(false);
       setFormData({ name: '', email: '', comment: '' });
     }, 12000);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
+  const infoCards = [
+    {
+      value: '24/7',
+      label: 'Spam garantizado',
+      icon: '📧',
+      color: 'purple',
+    },
+    {
+      value: '100%',
+      label: 'Arrepentimiento seguro',
+      icon: '😭',
+      color: 'pink',
+    },
+    {
+      value: '∞',
+      label: 'Cursos por vender',
+      icon: '💸',
+      color: 'yellow',
+    },
+  ];
+
   return (
-    <section id="cta" className="py-20 px-6">
-      <div className="container mx-auto max-w-4xl">
-        <div className="glass-effect rounded-3xl p-8 md:p-12 relative overflow-hidden">
-          {/* Background decoration */}
-          <div className="absolute top-0 right-0 text-[200px] opacity-5 rotate-12">💰</div>
-          <div className="absolute bottom-0 left-0 text-[150px] opacity-5 -rotate-12">🚀</div>
+    <section id="cta" className="section-padding relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-purple-600/20 rounded-full blur-[150px] -translate-y-1/2" />
+      <div className="absolute top-1/2 right-0 w-96 h-96 bg-pink-600/20 rounded-full blur-[150px] -translate-y-1/2" />
+
+      <div className="container mx-auto max-w-5xl relative z-10">
+        <div className="glass-card rounded-[2.5rem] p-8 md:p-12 lg:p-16 relative overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-full blur-3xl" />
+
+          {/* Floating decorations */}
+          <div className="absolute top-8 right-8 text-6xl opacity-10 float-slow hidden lg:block">
+            💰
+          </div>
+          <div className="absolute bottom-8 left-8 text-5xl opacity-10 float hidden lg:block">
+            🚀
+          </div>
 
           <div className="relative z-10">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-                ¡ÚLTIMA OPORTUNIDAD!
-              </h2>
-              <div className="text-2xl text-yellow-400 font-bold mb-4 animate-pulse">
-                ⏰ Solo quedan {placesLeft} plazas* ⏰
-              </div>
-              <p className="text-xl text-gray-300 mb-2">
-                Únete a la lista de espera para el curso que cambiará tu vida
-                <span className="text-xs block text-gray-500">
-                  (O al menos cambiará tu saldo bancario... a negativo)
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 badge-pink mb-6">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
                 </span>
+                <span>Oferta limitada</span>
+              </div>
+
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                ¡ULTIMA OPORTUNIDAD!
+              </h2>
+
+              <div className="inline-flex items-center gap-3 glass-dark px-6 py-3 rounded-full mb-6">
+                <span className="text-2xl animate-pulse">⏰</span>
+                <span className="text-xl md:text-2xl font-bold text-yellow-400">
+                  Solo quedan {placesLeft} plazas*
+                </span>
+              </div>
+
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                Unete a la lista de espera para el curso que cambiara tu vida
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                (O al menos cambiara tu saldo bancario... a negativo)
               </p>
             </div>
 
+            {/* Form or Success State */}
             {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
+                  {/* Name field */}
+                  <div className="relative">
                     <label className="block text-sm font-medium text-purple-400 mb-2">
                       Nombre Completo*
                     </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Futuro Millonario"
-                      className="w-full px-4 py-3 rounded-lg glass-dark text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
+                    <div
+                      className={`relative transition-all duration-300 ${
+                        focusedField === 'name' ? 'scale-[1.02]' : ''
+                      }`}
+                    >
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
+                        required
+                        placeholder="Futuro Millonario"
+                        className="input-modern"
+                      />
+                      {focusedField === 'name' && (
+                        <div className="absolute inset-0 rounded-xl bg-purple-500/10 pointer-events-none" />
+                      )}
+                    </div>
                   </div>
-                  <div>
+
+                  {/* Email field */}
+                  <div className="relative">
                     <label className="block text-sm font-medium text-purple-400 mb-2">
                       Email*
                     </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
+                    <div
+                      className={`relative transition-all duration-300 ${
+                        focusedField === 'email' ? 'scale-[1.02]' : ''
+                      }`}
+                    >
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        required
+                        placeholder="tufuturo@vibecoding.com"
+                        className="input-modern"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comment field */}
+                <div>
+                  <label className="block text-sm font-medium text-purple-400 mb-2">
+                    ¿Por que mereces ser millonario?
+                  </label>
+                  <div
+                    className={`relative transition-all duration-300 ${
+                      focusedField === 'comment' ? 'scale-[1.01]' : ''
+                    }`}
+                  >
+                    <textarea
+                      name="comment"
+                      value={formData.comment}
                       onChange={handleChange}
-                      required
-                      placeholder="tufuturo@vibecoding.com"
-                      className="w-full px-4 py-3 rounded-lg glass-dark text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      onFocus={() => setFocusedField('comment')}
+                      onBlur={() => setFocusedField(null)}
+                      rows={4}
+                      placeholder="Convencenos de que no eres otro perdedor mas..."
+                      className="input-modern resize-none"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-purple-400 mb-2">
-                    ¿Por qué mereces ser millonario?
-                  </label>
-                  <textarea
-                    name="comment"
-                    value={formData.comment}
-                    onChange={handleChange}
-                    rows={4}
-                    placeholder="Convéncenos de que no eres otro perdedor más..."
-                    className="w-full px-4 py-3 rounded-lg glass-dark text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-
-                <div className="text-center">
+                {/* Submit button */}
+                <div className="text-center pt-4">
                   <button
                     type="submit"
-                    className="btn-gradient text-lg px-12 py-4 group relative overflow-hidden"
+                    className="btn-gradient text-lg md:text-xl px-12 py-5 group"
                   >
-                    <span className="relative z-10">
-                      ¡QUIERO SER RICO YA!
+                    <span className="flex items-center gap-3">
+                      <span>¡QUIERO SER RICO YA!</span>
+                      <svg
+                        className="w-6 h-6 group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
+                      </svg>
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                   </button>
-                  <p className="text-xs text-gray-500 mt-2">
-                    *Al enviar aceptas recibir 847 emails diarios hasta el fin de los tiempos
+                  <p className="text-xs text-gray-500 mt-4">
+                    *Al enviar aceptas recibir 847 emails diarios hasta el fin de los
+                    tiempos
                   </p>
                 </div>
               </form>
             ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🎉</div>
-                <h3 className="text-3xl font-bold text-white mb-4">
-                  ¡FELICIDADES {formData.name.toUpperCase()}!
+              <div className="max-w-xl mx-auto text-center py-8">
+                <div className="text-7xl mb-6 animate-bounce">🎉</div>
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  ¡FELICIDADES{' '}
+                  <span className="gradient-text">
+                    {formData.name.toUpperCase()}
+                  </span>
+                  !
                 </h3>
-                <p className="text-xl text-green-400 mb-4">
-                  Ya eres 0.001% más rico (en experiencia)
+                <p className="text-xl text-green-400 mb-6">
+                  Ya eres 0.001% mas rico (en experiencia)
                 </p>
-                <div className="glass-dark rounded-2xl p-6 max-w-md mx-auto">
-                  <p className="text-gray-300 mb-4">
-                    Tu solicitud ha sido recibida y archivada en /dev/null
+
+                <div className="glass-dark rounded-2xl p-8">
+                  <p className="text-gray-300 mb-6">
+                    Tu solicitud ha sido recibida y archivada en{' '}
+                    <code className="text-purple-400">/dev/null</code>
                   </p>
+
                   {countdown !== null && countdown > 0 && (
-                    <div>
-                      <p className="text-purple-400 font-bold text-2xl mb-2">
-                        Próximos pasos en: {countdown}s
+                    <div className="space-y-4">
+                      <p className="text-purple-400 font-bold text-2xl">
+                        Proximos pasos en: {countdown}s
                       </p>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-1000"
+                      <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000"
                           style={{ width: `${(10 - countdown) * 10}%` }}
                         />
                       </div>
                     </div>
                   )}
+
                   {countdown === 0 && (
-                    <p className="text-yellow-400 animate-pulse">
-                      Procesando tu futuro millonario... (Error 404: Dinero no encontrado)
+                    <p className="text-yellow-400 animate-pulse text-lg">
+                      Procesando tu futuro millonario...
+                      <br />
+                      <span className="text-sm">(Error 404: Dinero no encontrado)</span>
                     </p>
                   )}
                 </div>
               </div>
             )}
 
-            <div className="mt-8 grid md:grid-cols-3 gap-6 text-center">
-              <div className="glass-dark rounded-xl p-6 card-hover group transition-all duration-300 hover:border-purple-400/50">
-                <div className="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">
-                  24/7
+            {/* Info cards */}
+            <div className="mt-12 grid md:grid-cols-3 gap-4 lg:gap-6">
+              {infoCards.map((card, index) => (
+                <div
+                  key={card.label}
+                  className="glass-dark rounded-2xl p-6 text-center card-hover group"
+                >
+                  <div
+                    className={`text-4xl lg:text-5xl font-bold mb-2 ${
+                      card.color === 'purple'
+                        ? 'gradient-text'
+                        : card.color === 'pink'
+                        ? 'text-pink-400'
+                        : 'gradient-text-gold'
+                    } group-hover:scale-110 transition-transform`}
+                  >
+                    {card.value}
+                  </div>
+                  <p className="text-sm text-gray-400 mb-2">{card.label}</p>
+                  <div className="text-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    {card.icon}
+                  </div>
                 </div>
-                <p className="text-sm text-gray-300 group-hover:text-purple-300 transition-colors">
-                  Spam garantizado
-                </p>
-                <div className="text-2xl mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  📧
-                </div>
-              </div>
-              <div className="glass-dark rounded-xl p-6 card-hover group transition-all duration-300 hover:border-pink-400/50">
-                <div className="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">
-                  100%
-                </div>
-                <p className="text-sm text-gray-300 group-hover:text-pink-300 transition-colors">
-                  Arrepentimiento seguro
-                </p>
-                <div className="text-2xl mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  😭
-                </div>
-              </div>
-              <div className="glass-dark rounded-xl p-6 card-hover group transition-all duration-300 hover:border-yellow-400/50">
-                <div className="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300 group-hover:animate-spin">
-                  ∞
-                </div>
-                <p className="text-sm text-gray-300 group-hover:text-yellow-300 transition-colors">
-                  Cursos por vender
-                </p>
-                <div className="text-2xl mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  💸
-                </div>
-              </div>
+              ))}
             </div>
 
-            <p className="text-center text-xs text-gray-500 mt-6">
-              *Las plazas son infinitas pero la presión psicológica es real
+            {/* Disclaimer */}
+            <p className="text-center text-xs text-gray-600 mt-8">
+              *Las plazas son infinitas pero la presion psicologica es real
             </p>
           </div>
         </div>
