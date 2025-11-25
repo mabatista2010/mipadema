@@ -4,153 +4,242 @@ import { useState } from 'react';
 
 export default function PricingSection() {
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   const plans = [
     {
       name: 'Gratis',
       price: '$0',
+      yearlyPrice: '$0',
       period: '/mes',
-      description: 'Para los que quieren soñar gratis',
+      description: 'Para los que quieren sonar gratis',
       features: [
-        '1 video de motivación',
-        'Acceso al grupo de Telegram (solo lectura)',
-        'Newsletter spam semanal',
-        'Certificado en Comic Sans',
-        'Soporte por palomas mensajeras'
+        { text: '1 video de motivacion', included: true },
+        { text: 'Acceso al grupo de Telegram (solo lectura)', included: true },
+        { text: 'Newsletter spam semanal', included: true },
+        { text: 'Certificado en Comic Sans', included: true },
+        { text: 'Soporte por palomas mensajeras', included: true },
       ],
-      notIncluded: [
-        'Contenido útil',
-        'Resultados reales',
-        'Devoluciones'
-      ],
-      cta: 'Empezar a Soñar',
+      notIncluded: ['Contenido util', 'Resultados reales', 'Devoluciones'],
+      cta: 'Empezar a Sonar',
       popular: false,
-      gradient: 'from-gray-600 to-gray-800'
+      gradient: 'from-gray-500 to-gray-700',
+      icon: '🆓',
     },
     {
       name: 'Pro',
       price: '$999',
+      yearlyPrice: '$9,999',
       period: '/mes',
-      description: 'El más vendido (porque lo decimos nosotros)',
+      description: 'El mas vendido (porque lo decimos nosotros)',
       features: [
-        'Todo lo del plan Gratis',
-        '10 horas de videos obsoletos',
-        'Plantillas de 2015',
-        'Mentor IA (ChatGPT gratis)',
-        'Grupo VIP de WhatsApp (200 personas)',
-        'Descuento del 0.1% en el próximo curso'
+        { text: 'Todo lo del plan Gratis', included: true },
+        { text: '10 horas de videos obsoletos', included: true },
+        { text: 'Plantillas de 2015', included: true },
+        { text: 'Mentor IA (ChatGPT gratis)', included: true },
+        { text: 'Grupo VIP de WhatsApp', included: true },
+        { text: 'Descuento del 0.1% en proximo curso', included: true },
       ],
-      notIncluded: [
-        'Trabajo garantizado',
-        'Conocimiento actualizado',
-        'Sentido común'
-      ],
+      notIncluded: ['Trabajo garantizado', 'Conocimiento actualizado'],
       cta: '¡Hazte "Pro"!',
       popular: true,
-      gradient: 'from-purple-600 to-pink-600'
+      gradient: 'from-purple-500 to-pink-500',
+      icon: '⭐',
     },
     {
       name: 'Enterprise',
       price: '$9,999',
+      yearlyPrice: '$99,999',
       period: '/mes',
-      description: 'Para CEOs del futuro (desempleados del presente)',
+      description: 'Para CEOs del futuro',
       features: [
-        'Todo lo del plan Pro',
-        'Llamada mensual de 5 minutos',
-        'Tu nombre en los créditos',
-        'NFT exclusivo (sin valor)',
-        'Acceso al "Círculo Interno" (grupo de Facebook)',
-        'Diploma enmarcado (marco no incluido)',
-        'Sesión de coaching (venderte más cursos)'
+        { text: 'Todo lo del plan Pro', included: true },
+        { text: 'Llamada mensual de 5 minutos', included: true },
+        { text: 'Tu nombre en los creditos', included: true },
+        { text: 'NFT exclusivo (sin valor)', included: true },
+        { text: 'Acceso al "Circulo Interno"', included: true },
+        { text: 'Diploma enmarcado (marco no incluido)', included: true },
+        { text: 'Sesion de coaching (venderte mas cursos)', included: true },
       ],
-      notIncluded: [
-        'ROI positivo',
-        'Dignidad',
-        'Reembolsos'
-      ],
-      cta: 'Vender un Riñón',
+      notIncluded: ['ROI positivo'],
+      cta: 'Vender un Rinon',
       popular: false,
-      gradient: 'from-yellow-500 to-yellow-700'
-    }
+      gradient: 'from-yellow-500 to-orange-500',
+      icon: '👑',
+    },
   ];
 
   return (
-    <section id="pricing" className="py-20 px-6">
-      <div className="container mx-auto">
+    <section id="pricing" className="section-padding relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-600/10 rounded-full blur-[120px]" />
+
+      <div className="container mx-auto relative z-10">
+        {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-            Planes de "Inversión"
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Elige cuánto quieres perder este mes. Recuerda: no es un gasto, 
-            es una "inversión en tu futuro" (spoiler: no lo es).
+          <span className="badge-gold mb-4 inline-block">Precios</span>
+          <h2 className="section-title">Planes de &quot;Inversion&quot;</h2>
+          <p className="section-subtitle">
+            Elige cuanto quieres perder este mes. Recuerda: no es un gasto, es una
+            &quot;inversion en tu futuro&quot; (spoiler: no lo es).
           </p>
-          <div className="mt-4 inline-block glass-effect px-4 py-2 rounded-full">
-            <span className="text-yellow-400">⚠️</span>
-            <span className="text-sm text-gray-300 ml-2">
-              Sin garantía de devolución bajo ninguna circunstancia
+
+          {/* Billing Toggle */}
+          <div className="mt-8 inline-flex items-center gap-4 glass-card rounded-full p-2">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                billingCycle === 'monthly'
+                  ? 'bg-purple-500 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Mensual
+            </button>
+            <button
+              onClick={() => setBillingCycle('yearly')}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                billingCycle === 'yearly'
+                  ? 'bg-purple-500 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Anual
+              <span className="badge-pink text-[10px]">-0.1%</span>
+            </button>
+          </div>
+
+          {/* Warning badge */}
+          <div className="mt-6">
+            <span className="inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full text-sm">
+              <span className="text-yellow-400">⚠️</span>
+              <span className="text-gray-400">
+                Sin garantia de devolucion bajo ninguna circunstancia
+              </span>
             </span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`relative ${plan.popular ? 'md:-mt-8' : ''}`}
+              className={`relative ${plan.popular ? 'md:-mt-8 md:mb-8' : ''}`}
               onMouseEnter={() => setHoveredPlan(index)}
               onMouseLeave={() => setHoveredPlan(null)}
             >
+              {/* Popular badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-bold whitespace-nowrap">
-                    MÁS POPULAR (según nosotros)
+                <div className="absolute -top-5 left-0 right-0 flex justify-center z-10">
+                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-purple-500/30">
+                    MAS POPULAR (segun nosotros)
                   </span>
                 </div>
               )}
-              
-              <div className={`glass-effect rounded-3xl p-8 h-full card-hover ${
-                plan.popular ? 'border-2 border-purple-500 glow' : ''
-              }`}>
-                <div className="text-center mb-6">
-                  <h3 className={`text-2xl font-bold bg-gradient-to-r ${plan.gradient} bg-clip-text text-transparent`}>
+
+              <div
+                className={`h-full glass-card rounded-3xl p-8 transition-all duration-500 ${
+                  plan.popular ? 'border-2 border-purple-500/50 glow-purple' : ''
+                } ${hoveredPlan === index ? 'scale-[1.02]' : ''}`}
+              >
+                {/* Plan header */}
+                <div className="text-center mb-8">
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${plan.gradient} bg-opacity-20 mb-4`}
+                  >
+                    <span className="text-3xl">{plan.icon}</span>
+                  </div>
+                  <h3
+                    className={`text-2xl font-bold bg-gradient-to-r ${plan.gradient} bg-clip-text text-transparent`}
+                  >
                     {plan.name}
                   </h3>
-                  <div className="mt-4">
-                    <span className="text-5xl font-bold text-white">{plan.price}</span>
-                    <span className="text-gray-400">{plan.period}</span>
+                  <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
+                </div>
+
+                {/* Price */}
+                <div className="text-center mb-8">
+                  <div className="flex items-end justify-center gap-1">
+                    <span className="text-5xl font-bold text-white">
+                      {billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
+                    </span>
+                    <span className="text-gray-500 mb-2">
+                      {billingCycle === 'monthly' ? '/mes' : '/año'}
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-400 mt-2">{plan.description}</p>
+                  {plan.popular && (
+                    <p className="text-xs text-purple-400 mt-2">
+                      Ahorras $0.99 al ano*
+                    </p>
+                  )}
                 </div>
 
-                <div className="space-y-3 mb-6">
-                  <p className="text-sm font-bold text-green-400">✓ Incluye:</p>
+                {/* Features */}
+                <div className="space-y-3 mb-8">
                   {plan.features.map((feature, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <span className="text-green-400 mt-1">✓</span>
-                      <span className="text-gray-300 text-sm">{feature}</span>
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mt-0.5">
+                        <svg
+                          className="w-3 h-3 text-green-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                      <span className="text-sm text-gray-300">{feature.text}</span>
                     </div>
                   ))}
+
+                  {/* Not included */}
+                  <div className="pt-4 border-t border-white/5">
+                    {plan.notIncluded.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3 mt-3 opacity-50">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center mt-0.5">
+                          <svg
+                            className="w-3 h-3 text-red-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={3}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </div>
+                        <span className="text-sm text-gray-500 line-through">
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="space-y-2 mb-6 opacity-60">
-                  <p className="text-sm font-bold text-red-400">✗ No incluye:</p>
-                  {plan.notIncluded.map((item, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <span className="text-red-400 mt-1">✗</span>
-                      <span className="text-gray-400 text-sm line-through">{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button className={`w-full ${
-                  plan.popular ? 'btn-gradient' : 'btn-glass'
-                } ${hoveredPlan === index ? 'animate-pulse' : ''}`}>
+                {/* CTA Button */}
+                <button
+                  className={`w-full py-4 rounded-xl font-bold transition-all duration-300 ${
+                    plan.popular
+                      ? 'btn-gradient'
+                      : 'glass-dark hover:bg-white/10 text-white'
+                  }`}
+                >
                   {plan.cta}
                 </button>
 
+                {/* Hover message */}
                 {hoveredPlan === index && (
-                  <p className="text-xs text-center text-gray-500 mt-3 animate-pulse">
+                  <p className="text-xs text-center text-gray-500 mt-4 animate-pulse">
                     Por favor, no lo hagas
                   </p>
                 )}
@@ -159,10 +248,31 @@ export default function PricingSection() {
           ))}
         </div>
 
-        <div className="text-center mt-12 text-gray-400">
-          <p className="text-sm">
-            💡 <strong>Pro tip:</strong> El plan gratis tiene el mismo valor educativo que los otros dos
-          </p>
+        {/* Pro tip */}
+        <div className="text-center mt-12">
+          <div className="inline-flex items-center gap-3 glass-card rounded-full px-6 py-3">
+            <span className="text-xl">💡</span>
+            <span className="text-gray-400 text-sm">
+              <strong className="text-white">Pro tip:</strong> El plan gratis tiene el
+              mismo valor educativo que los otros dos
+            </span>
+          </div>
+        </div>
+
+        {/* Guarantee section */}
+        <div className="mt-16 max-w-2xl mx-auto">
+          <div className="glass-card rounded-3xl p-8 text-center">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <span className="text-4xl">🛡️</span>
+              <h4 className="text-xl font-bold text-white">
+                Garantia de 0 dias
+              </h4>
+            </div>
+            <p className="text-gray-400 text-sm">
+              Si no estas satisfecho con tu compra, puedes escribirnos un email que
+              nunca responderemos. Tu dinero ya es nuestro, pero valoramos tu opinion.
+            </p>
+          </div>
         </div>
       </div>
     </section>
